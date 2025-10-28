@@ -1,0 +1,34 @@
+<div class="main-title-wrapper" style="text-align: center;">
+
+    <h1>Enlight</h1>
+        
+    <p>
+        {% if user.is_authenticated %}
+            <p class="top-photo-title">こんにちは、{{ user.username }}さん！<br>
+                
+            </p>
+            <div class="detail-flex" style="display: flex; justify-content: center;">
+                <button type="button" onclick="location.href='{% url 'enright:post' %}'" class="btn_01">投稿する</button>
+                
+                <form method="POST" action="{% url 'accounts:citizen_logout' %}" style="margin: 0;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn_01">ログアウト</button>
+                </form>
+            </div>
+        {% else %}
+            <p class="top-photo-title">こんにちは<br>
+                
+            </p>
+            <div class="display-flex" style="display: flex; justify-content: center;">
+                <a href="{% url 'accounts:citizen_signup' %}" 
+                    class="btn_01">サインアップ</a>
+                <a href="{% url 'accounts:citizen_login' %}" 
+                    class="btn_01">ログイン</a>
+            </div>
+            <br>
+        {% endif %}
+    </p>
+
+    <hr>
+    
+    </div>

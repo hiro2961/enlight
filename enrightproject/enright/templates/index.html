@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}Enlight{% endblock %}
+
+{% block contents %}
+
+    {% include "photos_title.html" %}
+
+    <div class="search-wrapper">
+        <form method="get" class="search-form">
+            {{ form.keyword.label_tag }}
+            {{ form.keyword }}
+        <button type="submit"></button>
+        </form>
+    </div>
+    
+    <div class="container main-content-sections">
+
+        <h2>活動情報</h2>
+        <div class="post-section">
+            {% if activity_posts %}
+                {% include "photos_list.html" with object_list=activity_posts %} 
+            {% else %}
+                <p>現在、活動情報に関する投稿はありません。</p>
+            {% endif %}
+        </div>
+        {# 一覧ページへのボタン #}
+        <div style="text-align: right; margin-bottom: 30px;">
+            <a href="{% url 'enright:activity_index' %}" class="btn_01">活動情報をもっと見る &raquo;</a>
+        </div>
+        <hr>
+
+        <h2>講義情報</h2>
+        <div class="post-section">
+            {% if lecture_posts %}
+                {% include "photos_list.html" with object_list=lecture_posts %}
+            {% else %}
+                <p>現在、講義情報に関する投稿はありません。</p>
+            {% endif %}
+        </div>
+        {# 一覧ページへのボタン #}
+        <div style="text-align: right; margin-bottom: 30px;">
+            <a href="{% url 'enright:lecture_index' %}" class="btn_01">講義情報をもっと見る &raquo;</a>
+        </div>
+        <hr>
+
+        <h2>災害対策情報</h2>
+        <div class="post-section">
+            {% if disaster_posts %}
+                {% include "photos_list.html" with object_list=disaster_posts %}
+            {% else %}
+                <p>現在、災害対策情報に関する投稿はありません。</p>
+            {% endif %}
+        </div>
+        {# 一覧ページへのボタン #}
+        <div style="text-align: right; margin-bottom: 30px;">
+            <a href="{% url 'enright:disaster_index' %}" class="btn_01">災害対策情報をもっと見る &raquo;</a>
+        </div>
+        <hr>
+
+    </div>
+    
+{% endblock %}

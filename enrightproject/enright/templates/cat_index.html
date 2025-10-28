@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}{{ page_title }}一覧{% endblock %} 
+
+{% block contents %}
+
+    {% include "photos_title.html" %}
+
+    <div class="search-wrapper">
+        <form method="get" class="search-form">
+            {{ form.keyword.label_tag }}
+            {{ form.keyword }}
+        <button type="submit"></button>
+        </form>
+    </div>
+
+    <div class="container">
+        <h2>{{ page_title }}一覧</h2> 
+
+        {% if object_list %}
+            {% include "photos_list.html" %} 
+        {% else %}
+            <p>現在、{{ page_title }}に関する投稿はありません。</p>
+        {% endif %}
+
+        {% include "pagination.html" %} 
+
+        <br>
+        <a class="btn_01" href="{% url 'enright:index' %}">トップページに戻る</a>
+    </div> 
+{% endblock %}

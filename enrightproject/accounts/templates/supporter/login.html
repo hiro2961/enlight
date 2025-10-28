@@ -1,0 +1,62 @@
+
+<!-- ベーステンプレートを適用する -->
+{% extends 'base.html' %}
+<!-- ヘッダー情報のページタイトルを設定する -->
+{% block title %}Login page{% endblock %}
+
+      {% block contents %}  
+      <main class="form-signin">
+      <!-- ユーザー名とパスワードが一致しない場合のメッセージ -->
+      {% if form.errors %}
+        <p style="color: red">ユーザー名とパスワードが一致しません。</p>
+      {% endif %}
+      <!-- ログインのフォームを配置 -->
+      <form method="post">
+        {% csrf_token %}
+        <h1>支援者ログイン</h1>
+        <!--
+        <div class="form-floating">～</div>の2つのブロックを削除して
+        以下に書き換え
+        -->
+        <!-- Usernameのラベル(非表示) -->
+        <label for="Username" class="visually-hidden">
+          ユーザー名</label>
+        <!-- usernameの<input>タグを出力-->
+        <!-- name属性の値はLoginViewで定義されているフィールド名username -->
+        <input type="text"
+               name="username"
+               id="id_username"
+               maxlength="150"
+               autocapitalize="none"
+               autocomplete="username"
+               class="form-control"
+               placeholder="ユーザー名"
+               required autofocus>
+        <!-- Passwordのラベル(非表示) -->
+        <br>
+        <label for="Password" class="visually-hidden">
+          パスワード</label>
+        <!-- passwordの<input>タグを出力-->
+        <!-- name属性の値はLoginViewで定義されているフィールド名password -->
+        <input type="password"
+               name="password"
+               id="id_password"
+               autocomplete="current-password"
+               class="form-control"
+               placeholder="パスワード"
+               required autofocus>
+        <br>
+        <!-- <button>～</button>を書き換えてログインボタンを配置 -->
+            <button class="btn_02"
+                   type="submit">ログイン</button>
+        
+        <!-- パスワードリセットページのリンクテキスト -->
+        <br><br>
+        <p><a class="btn_03" href="{% url "password_reset" %}" >パスワードを忘れましたか?</a><p>
+        <!-- ログイン直後のリダイレクト先(トップページ)のURLパターンを設定 -->
+        <input type="hidden"
+               name="next"
+               value="{% url 'main:index' %}">
+      </form>
+    </main>   
+{% endblock %}

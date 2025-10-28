@@ -1,0 +1,46 @@
+<!-- ベーステンプレートを適応する -->
+{% extends 'base.html' %}
+{% load static %}
+<!-- ヘッダー情報のページタイトルを設定する -->
+{% block title %}{{object.title}}/Enlight{% endblock %}
+
+    {% block contents %}
+    <!-- Bootstrapのグリッドシステム -->
+    <br>
+    <div class="container">
+        <div class="detail-flex ">
+            <div class="detail-margin">
+                <p><img src="{{ object.image1.url }}" class="img-fluid"></p>
+                    <!-- 2枚目の写真が投稿されていたら表示する -->
+                {% if object.image2 %}
+                    <p><img src="{{ object.image2.url }}" class="img-fluid"></p>
+                {% endif %} 
+            </div>
+            <div class="detail-margin2">
+                    
+                <div class="photo-text">
+                    <!-- タイトル -->
+                    <h1>{{object.title}}</h1>
+                    <h3 class="user-name">投稿者:<a class="user-btn" href="{% url 'enright:user_list' user=object.user.id %}">{{object.user.username}}</a></h3>
+                    <p class="user-time">{{object.posted_at}}に投稿</p>
+                    <hr>
+                    <p class="user-comment">{{object.comment| linebreaksbr }}</p>
+                        
+                </div>
+                {% if request.user == object.user %}
+                <form method="POST">
+                    <button type="button" onclick="location.href='{% url 'enright:photo_delete' object.pk %}'"
+                    class="btn_02">削除する</button>
+                </form>
+                {% endif %}
+            </div>
+                
+        </div>
+        <a href="{% url 'enright:index' %}" class="btn_01">トップに戻る</a>
+        <br>
+        <br>
+        <p  class="margin-bottom"></p>
+            
+        
+    </div>
+    {% endblock %}

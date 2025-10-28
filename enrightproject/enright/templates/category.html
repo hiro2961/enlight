@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}カテゴリー一覧{% endblock %} {# タイトルを「マイページ」に修正 #}
+
+{% block contents %}
+
+<div class="container">
+    <div class="mypage">
+        
+        <h2> カテゴリー一覧</h2>
+       
+    </div>
+
+    <div class="container">
+        <div class="list_category">
+            {% for category in categories %}
+                <a class="btn_03" href="{% url 'enright:photos_cat' category=category.id %}">{{ category.title }}</a>
+            {% endfor %}
+            
+        </div>        
+    </div>
+    <br>
+    <a class="btn_01" href="{% url 'enright:index' %}">トップページに戻る</a>
+</div> 
+{% endblock %}

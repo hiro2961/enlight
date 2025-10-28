@@ -1,0 +1,134 @@
+/* ================================================= */
+/* ハンバーガーメニューとドロップダウンのスタイル */
+/* ================================================= */
+
+
+/* ------------------------------------------- */
+/* 1. メニューコンテナの開閉と位置固定 (右側表示・スクロール対応) */
+/* ------------------------------------------- */
+
+.Menu {
+    /* 画面に固定する設定 (必須) */
+    position: fixed; 
+    
+    /* 画面の右端と上端に固定 */
+    right: 0; 
+    top: 0;
+    
+    /* 画面の幅と高さいっぱいに広げる */
+    width: 100%;
+    height: 100%;
+    
+    /* 他の要素の上に確実に表示させるための重なり順 */
+    z-index: 1000; 
+    
+    /* ★修正点★: メニューの内容が画面の高さより長い場合、スクロールを有効にする */
+    overflow-y: auto; 
+    -webkit-overflow-scrolling: touch; 
+    
+    /* 初期状態: 閉じた状態（非表示）*/
+    transform: translateX(100%); 
+    visibility: hidden;
+    transition: transform 0.3s ease-out, visibility 0.3s;
+    
+    /* ★修正点★: メニュー展開時の背景色/オーバーレイを半透明 (70%不透明) に設定 */
+    background-color: rgba(0, 0, 0, 0.7); 
+}
+
+/* ★★★ メニューが開いた状態 (MenuIsOpenクラスが付いたとき) ★★★ */
+.Menu.MenuIsOpen {
+    transform: translateX(0); /* 画面内に移動して表示 */
+    visibility: visible;
+}
+
+
+/* ------------------------------------------- */
+/* 2. メニュー内のコンテンツの配置 */
+/* ------------------------------------------- */
+
+/* メニュー全体のヘッダー的な部分（MENUテキスト） */
+.Menu-Header {
+    color: white;
+    padding: 30px;
+    font-size: 24px;
+    text-decoration: none;
+    display: block;
+}
+
+/* ナビゲーションリスト (.menu-list) の配置調整 */
+.menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: left; /* リスト項目を左寄せ */
+    padding-top: 20px; 
+}
+
+/* リスト項目内の通常のリンク */
+.menu-list li a.menu-text {
+    display: block;
+    padding: 10px 30px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+}
+.menu-list li button.menu-text2 {
+    /* ログアウトボタンなど、リンクに見えるボタンのスタイル */
+    background: none;
+    border: none;
+    color: #fff;
+    padding: 10px 30px;
+    width: 100%;
+    text-align: left;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+
+/* ------------------------------------------- */
+/* 3. ドロップダウン機能のスタイル */
+/* ------------------------------------------- */
+
+/* ドロップダウンメニューの親項目 (.menu-dropdown) */
+.menu-dropdown {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: relative; 
+    z-index: 1001; 
+}
+
+/* 展開/格納を切り替える親項目 (.dropdown-toggle) */
+.dropdown-toggle {
+    cursor: pointer;
+    display: block; 
+    padding: 10px 30px; 
+    color: #fff; 
+    font-size: 18px; 
+    position: relative; 
+    z-index: 1001; 
+}
+
+/* ドロップダウンのサブメニュー（ネストされた ul） */
+.dropdown-menu {
+    display: none; /* デフォルトで非表示 */
+    padding-left: 40px; 
+    list-style: none;
+    margin: 0;
+}
+
+/* サブメニュー内のリンクのスタイル */
+.dropdown-menu li a {
+    padding: 5px 30px 5px 0; 
+    display: block;
+    color: #ccc; 
+    text-decoration: none;
+    font-size: 16px;
+    position: relative;
+    z-index: 1002;
+}
+
+/* ★★★ ドロップダウン表示のトリガー ★★★ */
+.Menu.MenuIsOpen .menu-dropdown.active .dropdown-menu {
+    display: block;
+}

@@ -1,0 +1,165 @@
+{% load static %}
+
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style_base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style_menu.css' %}">
+    
+    </head>
+<body>
+    
+    <div class="Menu">
+        <div class="container">
+            
+            <div><a href="{% url "main:index"%}" class="Menu-Header">MENU</a></div>
+            <div class="col-sm-4 offset-md-1 py-4">
+                <ul class="menu-list">
+                    {% if user.is_authenticated %}
+                    <li><a href="{% url 'enright:mypage' %}" 
+                            class="menu-text">マイページ</a></li>
+                    <li><a href="{% url "enright:category"%}"
+                            class="menu-text">カテゴリー</a></li>
+                    <li>
+                        <form method="POST" action="{% url 'accounts:citizen_logout' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="menu-text2">ログアウト</button>
+                        </form>
+                    </li>
+                    <li><a href="{% url 'password_reset' %}"
+                            class="menu-text">パスワードのリセット</a></li>
+                    <li><a href="mailto:admin@example.com" 
+                            class="menu-text">Email me</a></li>
+                    {% else %}
+                        
+                    <li class="menu-dropdown">
+                        <span class="menu-text dropdown-toggle">新規登録</span>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'accounts:rescue_signup' %}" 
+                                    class="menu-text">支援が必要な方はこちら</a></li>
+                            <li><a href="{% url 'accounts:citizen_signup' %}" 
+                                    class="menu-text">一般の方はこちら</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="menu-dropdown">
+                        <span class="menu-text dropdown-toggle">ログイン</span>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'accounts:rescue_login' %}" 
+                                    class="menu-text">支援が必要な方はこちら</a></li>
+                            <li><a href="{% url 'accounts:citizen_login' %}" 
+                                    class="menu-text">一般の方はこちら</a></li>
+                            <li><a href="{% url 'accounts:supporter_login' %}" 
+                                    class="menu-text">支援者はこちら</a></li>
+                        </ul>
+                    </li>
+                    
+                    
+
+                    <li><a href="mailto:admin@example.com" 
+                            class="menu-text">Email me</a></li>
+
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <header class="hd">
+        <div class="navbar">
+            
+            <a href="{% url 'main:index' %}" 
+               class="navbar-brand d-flex align-items-center">
+                
+                <strong>Enlight</strong>
+            </a>
+            <button class="menu-button" type="button" 
+                    data-bs-toggle="collapse" 
+                    data-bs-target="#navbarHeader" 
+                    aria-controls="navbarHeader" 
+                    aria-expanded="false" 
+                    aria-label="Toggle navigation">
+                <div class="menu-button-LineTop"></div>
+                <div class="menu-button-LineMedium"></div>
+                <div class="menu-button-LineBottom"></div>
+            </button> 
+            
+            
+        </div>
+    </header>
+
+    <main>
+        {% block contents %}{% endblock %}
+    </main>
+
+    <footer>
+        <div class="container">
+            <a href="#" class="back"></a>
+            <p>&copy; Enlight2025~</p>
+        </div>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    </footer>
+    
+
+<script>
+    const menu = document.querySelector(".Menu");
+    const button = document.querySelector(".menu-button");
+    const body = document.body;
+
+    const toggleMenu = () => {
+        menu.classList.toggle("MenuIsOpen");
+        // body.classList.toggle("IsScrollAllowed"); // 背景スクロール許可のため削除済み
+    };
+
+    button.addEventListener("click", () => {
+        toggleMenu();
+    });
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        // 1. ドロップダウン切り替え機能
+        var dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+        
+        dropdownToggles.forEach(function(toggle) {
+            toggle.addEventListener('click', function() {
+                var parentLi = this.closest('.menu-dropdown');
+                
+                if (parentLi) {
+                    // active クラスをトグル（あれば削除、なければ追加）
+                    parentLi.classList.toggle('active');
+                }
+            });
+        });
+
+        // 2. ドロップダウン内のリンククリックでメニューを閉じる機能
+        var menuLinks = document.querySelectorAll('.menu-list a');
+
+        menuLinks.forEach(function(link) {
+            link.addEventListener('click', function(event) {
+                // ドロップダウンの切り替え要素ではないことを確認
+                if (this.classList.contains('dropdown-toggle')) {
+                    return;
+                }
+
+                // リンクがクリックされたとき、メニューが**開いていれば**閉じる
+                if (menu.classList.contains("MenuIsOpen")) {
+                     toggleMenu(); 
+                }
+            });
+        });
+
+        // 3. ログイン/サインアップのサブメニュー内のリンククリックでメニューを閉じる
+        var subMenuLinks = document.querySelectorAll('.dropdown-menu a');
+        subMenuLinks.forEach(function(link) {
+            link.addEventListener('click', function() {
+                 if (menu.classList.contains("MenuIsOpen")) {
+                      toggleMenu(); 
+                 }
+            });
+        });
+    });
+</script>
+    
+</body>
+</html>

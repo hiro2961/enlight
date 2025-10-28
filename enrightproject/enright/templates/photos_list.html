@@ -1,0 +1,38 @@
+<div class="py-5 bg-light">
+    <div class="container">
+        <div class="row card-container">
+            {% for record in object_list %}
+    
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card-item">
+                    
+                    {# ★★★ 画像タグを修正・整理 ★★★ #}
+                    <img 
+                        src="{{ record.image1.url }}" 
+                        alt="{{ record.title }}" 
+                        aria-label="{{ record.title }}"
+                        class="img-fluid card-image">
+                    
+                    <div class="card-body">
+                        <p class="card-title">{{ record.title }}</p>
+                        
+                        <div class="justify-content-between align-items-center">
+                            <a href="{% url 'enright:user_list' user=record.user.id %}">
+                                <small class="card-user-name">投稿者:{{ record.user.username }}</small>
+                            </a>
+                            <br>
+                            <button type="button" class="btn_text"
+                                onclick="location.href='{% url 'enright:photos_cat' category=record.category.id %}'">
+                                {{ record.category.title }}
+                            </button>
+                        </div>
+                    </div>
+                
+                    <a href="{% url 'enright:photo_detail' record.pk %}" class="card-class"></a>   
+                </div>
+            </div>
+            
+            {% endfor %}
+        </div>
+    </div>
+</div>
