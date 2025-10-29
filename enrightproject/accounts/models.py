@@ -11,7 +11,8 @@ class CustomUser(AbstractUser):
     USER_TYPE_CHOICES = (
         (1, '一般ユーザー'),
         (2, '要支援者'),
-        (3, '支援者'), # 支援者は管理画面でのみ作成・設定
+        (3, '支援者'), 
+        (4, '管理者'), # ★★★ ここが追加・修正されました ★★★
     )
 
     # ユーザー種別を保存するフィールド
@@ -21,14 +22,13 @@ class CustomUser(AbstractUser):
         default=1,
     )
 
-    # ★★★ 追加: 資格情報フィールド ★★★
+    # 資格情報フィールド
     qualification_details = models.TextField(
         verbose_name='所持資格',
         blank=True,
         null=True,
         help_text='支援者が所持している資格を記載してください。'
     )
-    # ★★★ 追加ここまで ★★★
     
     # ★ リバースアクセサの競合を解消するため、related_nameを設定 ★
     groups = models.ManyToManyField(
