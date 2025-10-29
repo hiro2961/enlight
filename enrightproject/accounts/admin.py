@@ -2,30 +2,26 @@ from django.contrib import admin
 from .models import CustomUser
 
 class CustomUserAdmin(admin.ModelAdmin):
-    '''
-    管理ページのレコード一覧に表示するカラムを設定するクラス
-    '''
-    # ★★★ 修正箇所 ★★★
-    # list_displayに、表示したいカラム名（id, username, user_typeなど）を追加
-    list_display = ('id', 'username', 'user_type', 'is_staff')
+    '''管理ページのレコード一覧に表示するカラムを設定するクラス'''
     
-    # クリック可能なリンクを設定
+    # user_typeを削除し、is_staff (管理権限) のみで表示
+    list_display = ('id', 'username', 'is_staff') 
+    
     list_display_links = ('id', 'username')
 
-    # user_typeでフィルタリングできるようにする
-    list_filter = ('user_type', 'is_staff')
+    # user_typeを削除し、is_staff (管理権限) のみでフィルタリング
+    list_filter = ('is_staff',) 
 
-    # 検索フィールドの設定（usernameで検索可能に）
     search_fields = ('username',)
 
-    # 詳細ページでのフィールドの表示順序とグルーピング（例）
+    # fieldsetsからも 'user_type' の行を削除（または正しいフィールド名に修正）
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
         ('パーミッション', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
-        ('アカウント情報', {'fields': ('user_type', 'first_name', 'last_name', 'email')}),
+        # ★★★ ここを修正 ★★★
+        # アカウント種別フィールドが不明なため、一旦削除
+        ('個人情報', {'fields': ('first_name', 'last_name', 'email')}),
         ('重要日付', {'fields': ('last_login', 'date_joined')}),
     )
-    # ★★★ 修正箇所 終了 ★★★
 
-# Django管理サイトにCustomUser,CustomUserAdminを登録する
 admin.site.register(CustomUser, CustomUserAdmin)
