@@ -1,15 +1,31 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
-# ↑ GroupとPermissionのインポートが必要です
 
 class CustomUser(AbstractUser):
     '''
     Userモデルを継承したカスタムユーザモデル
     '''
     
-    # ★ リバースアクセサの競合を解消するため、related_nameを設定 ★
+    # ★★★ ここから追加 ★★★
     
-    # groupsフィールド
+    # ユーザー種別の選択肢を定義
+    USER_TYPE_CHOICES = (
+        (1, '一般ユーザー'),
+        (2, '要支援者'),
+        (3, '支援者'), # 支援者は管理画面でのみ作成・設定
+    )
+
+    # ユーザー種別を保存するフィールド
+    # default=1 で、新規ユーザーのデフォルトを「一般ユーザー」に設定
+    user_type = models.PositiveSmallIntegerField(
+        verbose_name='ユーザー種別',
+        choices=USER_TYPE_CHOICES,
+        default=1,
+    )
+
+    # ★★★ ここまで追加 ★★★
+    
+    # ★ リバースアクセサの競合を解消するため、related_nameを設定 ★
     groups = models.ManyToManyField(
         Group,
         verbose_name=('groups'),
@@ -19,7 +35,6 @@ class CustomUser(AbstractUser):
         related_query_name="rescue_user",
     )
     
-    # user_permissionsフィールド
     user_permissions = models.ManyToManyField(
         Permission,
         verbose_name=('user permissions'),
