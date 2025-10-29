@@ -16,7 +16,10 @@ class CitizenSignUpView(CreateView):
     success_url = reverse_lazy('accounts:citizen_signup_success')
 
     def form_valid(self, form):
-        user = form.save()
+        user = form.save(commit=False) # ユーザー情報を一時的に取得
+        # ★★★ 一般ユーザー（1）を設定 ★★★
+        user.user_type = 1 
+        user.save() # DBに保存
         self.object = user
         return super().form_valid(form)
 
@@ -35,7 +38,7 @@ class CitizenLoginView(LoginView):
         return reverse_lazy('main:index') # 例として 'main:index' にリダイレクト
 
 # =======================================================================
-# 2. 救助隊 (RESCUE)
+# 2. 救助隊 (RESCUE)  ← 要支援者
 # =======================================================================
 
 class RescueSignUpView(CreateView):
@@ -45,7 +48,10 @@ class RescueSignUpView(CreateView):
     success_url = reverse_lazy('accounts:rescue_signup_success')
 
     def form_valid(self, form):
-        user = form.save()
+        user = form.save(commit=False) # ユーザー情報を一時的に取得
+        # ★★★ 要支援者（2）を設定 ★★★
+        user.user_type = 2 
+        user.save() # DBに保存
         self.object = user
         return super().form_valid(form)
 
@@ -63,7 +69,7 @@ class RescueLoginView(LoginView):
         return reverse_lazy('main:index') # 例として 'main:index' にリダイレクト
 
 # =======================================================================
-# 3. サポーター (SUPPORTER)
+# 3. サポーター (SUPPORTER)  ← 支援者
 # =======================================================================
 
 class SupporterSignUpView(CreateView):
@@ -73,7 +79,10 @@ class SupporterSignUpView(CreateView):
     success_url = reverse_lazy('accounts:supporter_signup_success')
 
     def form_valid(self, form):
-        user = form.save()
+        user = form.save(commit=False) # ユーザー情報を一時的に取得
+        # ★★★ 支援者（3）を設定 ★★★
+        user.user_type = 3 
+        user.save() # DBに保存
         self.object = user
         return super().form_valid(form)
 
@@ -89,5 +98,3 @@ class SupporterLoginView(LoginView):
     def get_success_url(self):
         # ログイン後のサポーター向けリダイレクト先を定義
         return reverse_lazy('main:index') # 例として 'main:index' にリダイレクト
-
-# =======================================================================
