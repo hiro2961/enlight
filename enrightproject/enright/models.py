@@ -43,30 +43,55 @@ class PhotoPost(models.Model):
         )
     # タイトル用のフィールド
     title = models.CharField(
-        verbose_name='タイトル', # フィールドのタイトル
-        max_length=200          # 最大文字数は200
+        verbose_name='タイトル',# フィールドのタイトル
+        max_length=200# 最大文字数は200
         )
     # 内容用のフィールド
     comment = models.TextField(
         verbose_name='内容', # フィールドのタイトル
         )
+        
     # イメージのフィールド1
+    # ★★★ 修正箇所1: image1を必須ではない設定にする ★★★
     image1 = models.ImageField(
-        verbose_name='イメージ1', # フィールドのタイトル
-        upload_to='photos',      # MEDIA_ROOT以下のphotosにファイルを保存
+        verbose_name='写真1 (メイン)',
+        upload_to='photos',# MEDIA_ROOT以下のphotosにファイルを保存
+        blank=True, # フィールドの値は必須でない
+        null=True# データベースにnullが保存されることを許容
         )
     
-    # イメージのフィールド2
+    # イメージのフィールド2 (既に非必須)
     image2 = models.ImageField(
-        verbose_name='イメージ2', # フィールドのタイトル
-        upload_to='photos',      # MEDIA_ROOT以下のphotosにファイルを保存
-        blank=True,              # フィールドの値は必須でない
-        null=True                # データベースにnullが保存されることを許容
+        verbose_name='写真2', # フィールドのタイトルを'イメージ2'から変更
+        upload_to='photos',# MEDIA_ROOT以下のphotosにファイルを保存
+        blank=True,# フィールドの値は必須でない
+        null=True# データベースにnullが保存されることを許容
         )
+        
+    # ★★★ 修正箇所2: image3、image4、image5 を追加 (非必須) ★★★
+    image3 = models.ImageField(
+        verbose_name='写真3',
+        upload_to='photos',
+        blank=True,
+        null=True
+    )
+    image4 = models.ImageField(
+        verbose_name='写真4',
+        upload_to='photos',
+        blank=True,
+        null=True
+    )
+    image5 = models.ImageField(
+        verbose_name='写真5',
+        upload_to='photos',
+        blank=True,
+        null=True
+    )
+
     # 投稿日時のフィールド
     posted_at = models.DateTimeField(
-        verbose_name='投稿日時', # フィールドのタイトル
-        auto_now_add=True       # 日時を自動追加
+        verbose_name='投稿日時',# フィールドのタイトル
+        auto_now_add=True# 日時を自動追加
         )
     
     def __str__(self):
