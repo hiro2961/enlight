@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Delete Success{% endblock %}
+
+    {% block contents %}
+    <br>
+    <div class="container" style="text-align: center;">
+        <h2>投稿の削除が完了しました！</h2>
+        <br><br><br><br><br>
+        <a href="{% url "enright:index" %}" class="btn_01">トップページに戻る</a>
+        <a href="{% url 'enright:mypage' %}" class="btn_01">マイページに戻る</a>
+        <br><br><br><br>
+        <a href="{% url 'enright:lecture_index' %}" class="btn_01">講義情報一覧</a>
+        <a href="{% url 'enright:disaster_index' %}" class="btn_01">災害対策情報一覧</a>
+        <a href="{% url 'enright:activity_index' %}" class="btn_01">活動情報一覧</a>
+    </div>
+    {% endblock %}

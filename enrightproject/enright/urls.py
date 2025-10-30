@@ -1,4 +1,4 @@
-from django.urls import path,include
+from django.urls import path
 from . import views
 
 # URLパターンを逆引きできるように名前を付ける
@@ -6,68 +6,63 @@ app_name = 'enright'
 
 # URLパターンを登録する変数
 urlpatterns = [
-    # photoアプリへのアクセスはviewsモジュールのIndexViewを実行
-    path('',views.IndexView.as_view(), name='index'),
+    # トップページ
+    path('', views.IndexView.as_view(), name='index'),
 
-    # 写真投稿ページへのアクセスはviewsモジュールCreatePhotoViewを実行
-    path('post/', views.CreatePhotoView.as_view(), name='post'),
+    # カテゴリ専用投稿ページ
+    path('activity/post/', views.ActivityCreateView.as_view(), name='activity_post'),
+    path('lecture/post/', views.LectureCreateView.as_view(), name='lecture_post'),
+    path('disaster/post/', views.DisasterCreateView.as_view(), name='disaster_post'),
 
-    # 投稿完了ページへのアクセスはviewsモジュールのPostSuccessViewを実行
+    # 投稿完了ページ
     path('post_done/',
          views.PostSuccessView.as_view(),
          name='post_done'),
     
-    # カテゴリ一覧ページ
-    # photos/<Categoryテーブルのid値>にマッチング
-    # <int:category>は辞書{category: id値(int)}としてCaregoryViewに渡される
-    path('photos/<int:category>',
+    # 削除完了ページ
+    path('delete_done/',
+         views.DeleteSuccessView.as_view(),
+         name='delete_done'),
+    
+    # カテゴリ一覧ページ (IDによる絞り込み)
+    # ★★★ 修正箇所1: スラッシュを追加
+    path('photos/<int:category>/', 
          views.CategoryView.as_view(),
          name='photos_cat' 
          ),
 
     # ユーザーの投稿一覧ページ
-    # photos/<ユーザーテーブルのid値>にマッチング
-    # <int:user>は辞書{user: id値(int)}としてCaregoryViewに渡される
-    path('user-list/<int:user>',
+    # ★★★ 修正箇所2: スラッシュを追加
+    path('user-list/<int:user>/', 
          views.UserView.as_view(),
          name='user_list' 
          ),
 
     # 詳細ページ
-    # photos/<Photo postsテーブルのid値>にマッチング
-    # <int:pk>は辞書{pk: id値(int)}としてDeteilViewに渡される
-    path('photo-detail/<int:pk>',
+    path('photo-detail/<int:pk>/', # 元々スラッシュがありましたが、念のため確認
          views.DetailView.as_view(),
          name='photo_detail' 
          ),
     
     # マイページ
-    # mypage/へのアクセスはMypageViewを実行
     path('mypage/',
-         views.MypageView.as_view(),    
+         views.MypageView.as_view(),
          name='mypage' 
          ),
-     
+      
     # 投稿写真の削除
-    # photo/<Photo postsテーブルのid値>/delete/にマッチング
-    # <int:pk>は辞書{pk: id値(int)}としてDeteilViewに渡される
     path('photo/<int:pk>/delete/',
          views.PhotoDeleteView.as_view(),
          name='photo_delete' 
          ),
-     path('category/', views.CategoryListView.as_view(), name = 'category'),
+    
+    # カテゴリー一覧（カテゴリモデルの一覧）
+    path('category/', views.CategoryListView.as_view(), name='category'),
 
-# enright/urls.py のurlpatternsに追加
-
-# ... (既存のurlpatterns) ...
-
-# ----------------------------------------------------
-# ★コンテンツ別一覧ページ
-# ----------------------------------------------------
-path('activity/list/', views.ActivityIndexView.as_view(), name='activity_index'),
-path('lecture/list/', views.LectureIndexView.as_view(), name='lecture_index'),
-path('disaster/list/', views.DisasterIndexView.as_view(), name='disaster_index'),
-
-] # urlpatterns の閉じカッコ
-
-
+    # ----------------------------------------------------
+    # コンテンツ別一覧ページ
+    # ----------------------------------------------------
+    path('activity/list/', views.ActivityIndexView.as_view(), name='activity_index'),
+    path('lecture/list/', views.LectureIndexView.as_view(), name='lecture_index'),
+    path('disaster/list/', views.DisasterIndexView.as_view(), name='disaster_index'),
+]

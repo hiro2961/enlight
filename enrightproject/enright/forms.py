@@ -7,10 +7,11 @@ class PhotoPostForm(ModelForm):
     class Meta:
         
         model = PhotoPost
-        fields = ['category', 'title', 'comment', 'image1', 'image2']
+        # ★★★ 修正箇所: 'category'をfieldsから削除 ★★★
+        fields = ['title', 'comment', 'image1', 'image2']
 
         widgets = {
-            'category': forms.Select(attrs={'class': 'form-style'}), 
+            # ★★★ 修正箇所: 'category'に関する記述を削除 ★★★
             'title': forms.TextInput(attrs={'class': 'form-style', 'placeholder': '投稿タイトルを入力してください'}), 
             'comment': forms.Textarea(attrs={'class': 'form-style', 'rows': 5, 'placeholder': '内容を入力してください'}), 
             'image1': forms.ClearableFileInput(attrs={'class': 'form-control-file'}), 

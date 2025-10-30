@@ -1,32 +1,29 @@
-<!-- ベーステンプレートを適応する -->
 {% extends 'base.html' %}
-<!-- ヘッダー情報のページタイトルを設定する -->
-{% block title %}Photo Detail{% endblock %}
+{% block title %}マイページ{% endblock %}
 
     {% block contents %}
 
-    <!-- タイトルテンプレートは組み込まない -->
-
-    <!-- ユーザーの投稿件数を表示 -->
     {% if user.is_authenticated %}
         <br>
         <div style="text-align:center">
             <h4>{{ user.username }}さんのマイページ</h4>
-            {% if object_list.conut == 0 %}
+            {% if object_list.count == 0 %}
                 <p>{{ user.username }}さんの投稿はありません</p>
             {% else %}
                 <p>投稿<strong>{{ object_list.count }}</strong>件</p>
             {% endif %}
-            <a href="{% url 'enright:post' %}" class="btn_01">投稿する</a>
-            <p></p>
-        </div>
+            
+            <div style="display: flex; justify-content: center; gap: 10px; margin-top: 10px; margin-bottom: 20px;">
+                <a href="{% url 'enright:activity_post' %}" class="btn_01">活動情報投稿</a>
+                <a href="{% url 'enright:lecture_post' %}" class="btn_01">講義情報投稿</a>
+                <a href="{% url 'enright:disaster_post' %}" class="btn_01">災害対策情報投稿</a>
+            </div>
+            </div>
         <hr>
     {% endif %}
 
-    <!-- 投稿記事一覧テンプレートの組み込み -->
     {% include "photos_list.html" %}
 
-    <!-- ページネーションの組み込み -->
     {% include "pagination.html" %}
 
     {% endblock %}
