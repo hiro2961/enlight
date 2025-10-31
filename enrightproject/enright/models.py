@@ -51,14 +51,13 @@ class PhotoPost(models.Model):
         verbose_name='内容', # フィールドのタイトル
         )
         
-    # イメージのフィールド1
-    # ★★★ 修正箇所1: image1を必須ではない設定にする ★★★
+# イメージのフィールド1
     image1 = models.ImageField(
         verbose_name='写真1 (メイン)',
         upload_to='photos',# MEDIA_ROOT以下のphotosにファイルを保存
-        blank=True, # フィールドの値は必須でない
-        null=True# データベースにnullが保存されることを許容
-        )
+        # blank=False, # デフォルト値なので省略可能
+        # null=False   # デフォルト値なので省略可能
+    )
     
     # イメージのフィールド2 (既に非必須)
     image2 = models.ImageField(
