@@ -18,21 +18,24 @@
             <div class="col-sm-4 offset-md-1 py-4">
                 <ul class="menu-list">
                     {% if user.is_authenticated %}
+                    
+                    {# ★★★ ログイン中: 追加された投稿ドロップダウンメニュー ★★★ #}
+                    <li class="menu-dropdown">
+                        <span class="menu-text dropdown-toggle">投稿</span>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'enright:activity_post' %}" 
+                                        class="menu-text">活動情報投稿</a></li>
+                            <li><a href="{% url 'enright:lecture_post' %}" 
+                                        class="menu-text">講義情報投稿</a></li>
+                            <li><a href="{% url 'enright:disaster_post' %}" 
+                                        class="menu-text">災害対策情報投稿</a></li>
+                        </ul>
+                    </li>
+                    
                     <li><a href="{% url 'enright:mypage' %}" 
                             class="menu-text">マイページ</a></li>
                     <li><a href="{% url "enright:category"%}"
                             class="menu-text">カテゴリー</a></li>
-                    {% if user.is_staff %}
-                    <li class="menu-dropdown">
-                        <span class="menu-text dropdown-toggle">投稿</span>
-                        <ul class="dropdown-menu">
-                            <li><a href="{% url 'enright:post_by_title' category_title='活動情報' %}" 
-                                    class="menu-text">活動情報</a></li>
-                            <li><a href="{% url 'enright:post_by_title' category_title='災害対策情報' %}" 
-                                    class="menu-text">災害対策啓発</a></li>
-                        </ul>
-                    </li>
-                    {% endif %}
                     <li>
                         <form method="POST" action="{% url 'accounts:citizen_logout' %}">
                             {% csrf_token %}
@@ -40,18 +43,18 @@
                         </form>
                     </li>
                     <li><a href="{% url 'password_reset' %}"
-                            class="menu-text">パスワードのリセット</a></li>
+                                class="menu-text">パスワードのリセット</a></li>
                     <li><a href="mailto:admin@example.com" 
-                            class="menu-text">Email me</a></li>
+                                class="menu-text">Email me</a></li>
                     {% else %}
                         
                     <li class="menu-dropdown">
                         <span class="menu-text dropdown-toggle">新規登録</span>
                         <ul class="dropdown-menu">
                             <li><a href="{% url 'accounts:rescue_signup' %}" 
-                                    class="menu-text">支援が必要な方はこちら</a></li>
+                                        class="menu-text">支援が必要な方はこちら</a></li>
                             <li><a href="{% url 'accounts:citizen_signup' %}" 
-                                    class="menu-text">一般の方はこちら</a></li>
+                                        class="menu-text">一般の方はこちら</a></li>
                         </ul>
                     </li>
 
@@ -59,18 +62,23 @@
                         <span class="menu-text dropdown-toggle">ログイン</span>
                         <ul class="dropdown-menu">
                             <li><a href="{% url 'accounts:rescue_login' %}" 
-                                    class="menu-text">支援が必要な方はこちら</a></li>
+                                        class="menu-text">支援が必要な方はこちら</a></li>
                             <li><a href="{% url 'accounts:citizen_login' %}" 
-                                    class="menu-text">一般の方はこちら</a></li>
+                                        class="menu-text">一般の方はこちら</a></li>
                             <li><a href="{% url 'accounts:supporter_login' %}" 
-                                    class="menu-text">支援者はこちら</a></li>
+                                        class="menu-text">支援者はこちら</a></li>
+                            
+                            {# 以前追加した管理者ログインリンク #}
+                            <li><a href="{% url 'admin:login' %}" 
+                                        class="menu-text">管理者の方はこちら</a></li>
+                            
                         </ul>
                     </li>
                     
                     
 
                     <li><a href="mailto:admin@example.com" 
-                            class="menu-text">Email me</a></li>
+                                class="menu-text">Email me</a></li>
 
                     {% endif %}
                 </ul>

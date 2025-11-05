@@ -9,7 +9,48 @@ class CustomUser(AbstractUser):
     Userモデルを継承したカスタムユーザモデル
     '''
     
-    # 既存の 'auth.User' との関連名の競合を避けるための設定
+    # ユーザー種別の選択肢を定義
+    USER_TYPE_CHOICES = (
+        (1, '一般ユーザー'),
+        (2, '要支援者'),
+        (3, '支援者'), 
+        (4, '管理者'),
+    )
+
+    # ユーザー種別を保存するフィールド
+    user_type = models.PositiveSmallIntegerField(
+        verbose_name='ユーザー種別',
+        choices=USER_TYPE_CHOICES,
+        default=1,
+    )
+
+    # 資格情報フィールド
+    qualification_details = models.TextField(
+        verbose_name='所持資格',
+        blank=True,
+        null=True,
+        help_text='支援者が所持している資格を記載してください。'
+    )
+    
+    # ★★★ 修正箇所1: emailフィールドをユニークにする ★★★
+    # AbstractUserのemailをオーバーライドし、unique=Trueを設定
+    email = models.EmailField(
+        'email address',
+        unique=True,
+        blank=False,
+    )
+    
+    # ★★★ 修正箇所2: ログインに使うフィールドをメールアドレスに変更 ★★★
+    USERNAME_FIELD = 'email'
+    
+    # ★★★ 修正箇所3: ユーザー作成時に必須とするフィールドを設定 ★★★
+    # emailがUSERNAME_FIELDになったため、REQUIRED_FIELDSからemailを除外します
+    # ここでは既存のusernameを必須として残しますが、必要に応じてfirst_name, last_name等を追加してください。
+    REQUIRED_FIELDS = ['username']
+    
+    # ★ リバースアクセサの競合を解消するため、related_nameを設定 ★
+    
+    # groupsフィールド
     groups = models.ManyToManyField(
         Group,
         verbose_name=('groups'),
@@ -28,4 +69,4 @@ class CustomUser(AbstractUser):
         related_query_name="rescue_user_permission",
     )
 
-    pass
+    pass # (CustomUserクラスの終わり)

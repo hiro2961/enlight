@@ -27,10 +27,7 @@ class CitizenSignUpView(CreateView):
     success_url = reverse_lazy('accounts:citizen_signup_success')
 
     def form_valid(self, form):
-        user = form.save(commit=False)
-        user.is_staff = False # 一般市民は is_staff=False
-        user.save()
-        add_user_to_group(user, '一般市民')
+        user = form.save()
         self.object = user
         return super().form_valid(form)
 
@@ -59,7 +56,7 @@ class CitizenLoginView(LoginView):
 
 
 # =======================================================================
-# 2. 要支援者 (RESCUE)
+# 2. 救助隊 (RESCUE)
 # =======================================================================
 
 class RescueSignUpView(CreateView):
@@ -69,10 +66,7 @@ class RescueSignUpView(CreateView):
     success_url = reverse_lazy('accounts:rescue_signup_success')
 
     def form_valid(self, form):
-        user = form.save(commit=False)
-        user.is_staff = False # 要支援者は is_staff=False
-        user.save()
-        add_user_to_group(user, '要支援者')
+        user = form.save()
         self.object = user
         return super().form_valid(form)
     
@@ -100,7 +94,7 @@ class RescueLoginView(LoginView):
         return super().form_valid(form)
     
 # =======================================================================
-# 3. 支援者 (SUPPORTER)
+# 3. サポーター (SUPPORTER)
 # =======================================================================
 
 class SupporterSignUpView(CreateView):
@@ -110,10 +104,7 @@ class SupporterSignUpView(CreateView):
     success_url = reverse_lazy('accounts:supporter_signup_success')
 
     def form_valid(self, form):
-        user = form.save(commit=False)
-        user.is_staff = True # 支援者は is_staff=True
-        user.save()
-        # グループ追加は is_staff で識別するため省略
+        user = form.save()
         self.object = user
         return super().form_valid(form)
     
@@ -128,14 +119,7 @@ class SupporterLoginView(LoginView):
     template_name = 'supporter/login.html'
     
     def get_success_url(self):
-        return reverse_lazy('main:index')
+        # ログイン後のサポーター向けリダイレクト先を定義
+        return reverse_lazy('main:index') # 例として 'main:index' にリダイレクト
 
-    def form_valid(self, form):
-        user = form.get_user()
-        if not user.is_staff:
-            form.add_error(
-                None, 
-                ValidationError('このログインフォームは支援者専用です。アカウントの種類を確認してください。')
-            )
-            return self.form_invalid(form)
-        return super().form_valid(form)
+# =======================================================================
