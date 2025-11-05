@@ -22,6 +22,17 @@
                             class="menu-text">マイページ</a></li>
                     <li><a href="{% url "enright:category"%}"
                             class="menu-text">カテゴリー</a></li>
+                    {% if user.is_staff %}
+                    <li class="menu-dropdown">
+                        <span class="menu-text dropdown-toggle">投稿</span>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'enright:post_by_title' category_title='活動情報' %}" 
+                                    class="menu-text">活動情報</a></li>
+                            <li><a href="{% url 'enright:post_by_title' category_title='災害対策情報' %}" 
+                                    class="menu-text">災害対策啓発</a></li>
+                        </ul>
+                    </li>
+                    {% endif %}
                     <li>
                         <form method="POST" action="{% url 'accounts:citizen_logout' %}">
                             {% csrf_token %}

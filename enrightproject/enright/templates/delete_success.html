@@ -1,0 +1,17 @@
+<!-- ベーステンプレートを適応する -->
+{% extends 'base.html' %}
+<!-- ヘッダー情報のページタイトルを設定する -->
+{% block title %}Delete Success{% endblock %}
+
+    {% block contents %}
+    <!-- Bootstrapのグリッドシステム -->
+    <br>
+    <div class="container">
+        <h2>削除が完了しました！</h2><br><br><br><br>
+        <a href="{% url "enright:index" %}" class="btn_01">トップページに戻る</a>
+        <a href="{% url 'enright:mypage' %}" class="btn_01">マイページに戻る</a>
+        <a href="{% url 'enright:lecture_index' %}" class="btn_01">講義情報一覧に戻る</a>
+        <a href="{% url 'enright:disaster_index' %}" class="btn_01">災害対策情報一覧に戻る</a>
+        <a href="{% url 'enright:activity_index' %}" class="btn_01">活動情報一覧に戻る</a>
+    </div>
+    {% endblock %}

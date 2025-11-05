@@ -1,88 +1,81 @@
-<!-- ベーステンプレートを適応する -->
 {% extends 'base.html' %}
-<!-- ヘッダー情報のページタイトルを設定する -->
-{% block title %}投稿画面{% endblock %}
+{% block title %}{{ page_title }}投稿画面{% endblock %}
 
-    {% block contents %}
-    <br>
-    <div class="container">
-        <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                <table>
-                    <tr>
-                        <th>カテゴリ</th>
-                        <td>{{ form.category }}</td>
-                    </tr>
-                    <tr>
-                        <th>タイトル</th>
-                        <td>{{ form.title }}</td>
-                    </tr>
-                    <tr>
-                        <th>内容</th>
-                        <td>{{ form.comment }}</td>
-                    </tr>
-                    <tr>
-                        <th>画像1</th>
-                        <td>
-                            {{ form.image1 }}
-                            {# 選択された画像をプレビュー表示するためのimgタグ #}
-                            <img id="imagePreview1" src="#" alt="画像プレビュー1" style="max-width: 200px; height: auto; display: none;">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>画像2</th>
-                        <td>
-                            {{ form.image2 }}
-                            {# 選択された画像をプレビュー表示するためのimgタグ #}
-                            <img id="imagePreview2" src="#" alt="画像プレビュー2" style="max-width: 200px; height: auto; display: none;">
-                        </td>
-                    </tr>
-                </table>
-            <hr>
-            <button type="submit" class="btn_02">投稿する</button>
-        </form>
+{% block contents %}
+<br>
+<div class="container">
+    <h2>{{ page_title }}</h2>
+    <hr>
+    
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <th>タイトル</th>
+                <td>{{ form.title }}</td>
+            </tr>
+            <tr>
+                <th>内容</th>
+                <td>{{ form.comment }}</td>
+            </tr>
+            <tr>
+                <th>画像1</th>
+                <td>
+                    {{ form.image1 }}
+                    {# 選択された画像をプレビュー表示するためのimgタグ #}
+                    <img id="imagePreview1" src="#" alt="画像プレビュー1" style="max-width: 200px; height: auto; display: none;">
+                </td>
+            </tr>
+            <tr>
+                <th>画像2</th>
+                <td>
+                    {{ form.image2 }}
+                    {# 選択された画像をプレビュー表示するためのimgタグ #}
+                    <img id="imagePreview2" src="#" alt="画像プレビュー2" style="max-width: 200px; height: auto; display: none;">
+                </td>
+            </tr>
+        </table>
+        <hr>
+        <button type="submit" class="btn_02">投稿する</button>
+    </form>
 
-    </div>
-    
-    <script>
-        function setupImagePreview(inputId, previewId) {
-            const fileInput = document.getElementById(inputId);
-            const previewImg = document.getElementById(previewId);
-    
-            // 両方の要素がページに存在することを確認
-            if (fileInput && previewImg) {
-                // ファイル選択フィールドの内容が変わったとき（ファイルが選択されたとき）に実行される処理を設定
-                fileInput.addEventListener('change', function(event) {
-                    // 選択されたファイルの中から最初のファイル（通常は1つだけ）を取得
-                    const selectedFile = event.target.files[0];
-    
-                    
-                    // ファイルが実際に選択された場合
-                    if (selectedFile) {
-                        const reader = new FileReader();
-    
-                        // ファイルの読み込みが完了したときに実行される処理を設定
-                        reader.onload = function(e) {
-                            previewImg.src = e.target.result;
-                            previewImg.style.display = 'block';
-                        };
-                        reader.readAsDataURL(selectedFile);
-                    } else {
-                        previewImg.src = '#';
-                        previewImg.style.display = 'none';
-                    }
-                });
-            }
+</div>
+
+<script>
+    function setupImagePreview(inputId, previewId) {
+        const fileInput = document.getElementById(inputId);
+        const previewImg = document.getElementById(previewId);
+
+        // 両方の要素がページに存在することを確認
+        if (fileInput && previewImg) {
+            // ファイル選択フィールドの内容が変わったとき（ファイルが選択されたとき）に実行される処理を設定
+            fileInput.addEventListener('change', function(event) {
+                // 選択されたファイルの中から最初のファイル（通常は1つだけ）を取得
+                const selectedFile = event.target.files[0];
+
+                
+                // ファイルが実際に選択された場合
+                if (selectedFile) {
+                    const reader = new FileReader();
+
+                    // ファイルの読み込みが完了したときに実行される処理を設定
+                    reader.onload = function(e) {
+                        previewImg.src = e.target.result;
+                        previewImg.style.display = 'block';
+                    };
+                    reader.readAsDataURL(selectedFile);
+                } else {
+                    previewImg.src = '#';
+                    previewImg.style.display = 'none';
+                }
+            });
         }
-    
+    }
+
     // Djangoのフォームでレンダリングされるinput[type="file"]要素のIDは、デフォルトで "id_" + フィールド名
-    // 例: form.image1 は id="id_image1" となるため、それに合わせて関数を呼び出す。
-        setupImagePreview('id_image1', 'imagePreview1');
-        setupImagePreview('id_image2', 'imagePreview2');
-    </script>
-    
+    setupImagePreview('id_image1', 'imagePreview1');
+    setupImagePreview('id_image2', 'imagePreview2');
+</script>
 
 
-    
 {% endblock %}
-

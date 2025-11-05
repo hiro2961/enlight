@@ -7,14 +7,7 @@
             <p class="top-photo-title">こんにちは、{{ user.username }}さん！<br>
                 
             </p>
-            <div class="detail-flex" style="display: flex; justify-content: center;">
-                <button type="button" onclick="location.href='{% url 'enright:post' %}'" class="btn_01">投稿する</button>
-                
-                <form method="POST" action="{% url 'accounts:citizen_logout' %}" style="margin: 0;">
-                    {% csrf_token %}
-                    <button type="submit" class="btn_01">ログアウト</button>
-                </form>
-            </div>
+            
         {% else %}
             <p class="top-photo-title">こんにちは<br>
                 
