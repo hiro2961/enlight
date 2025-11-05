@@ -1,33 +1,110 @@
 from django.shortcuts import render
-# django.views.genericからTemplateView、ListViewをインポート
-from django.views.generic import TemplateView, ListView
-
-# django.views.genericからCreateViewをインポート
-from django.views.generic import CreateView
-
-# django.urlsからreverse_lazyをインポート
+from django.views.generic import TemplateView, ListView, CreateView, DetailView, DeleteView
 from django.urls import reverse_lazy
-
-# formsモジュールからPhotoPostFormをインポート
-from .forms import PhotoPostForm
-
-# method_decoratorをインポート
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-
-# modelsモジュールからモデルPhotoPostをインポート
-from .models import PhotoPost
-
-# django.views.genericからDetailViewをインポート
-from django.views.generic import DetailView
-
-# django.views.genericからDeleteViewをインポート
-from django.views.generic import DeleteView
-
 from django.db.models import Q
-from .forms import SearchForm
-from .models import Category
 
+# .modelsからPhotoPost, Categoryをインポート
+from .models import PhotoPost, Category
+# .formsからPhotoPostForm, SearchFormをインポート
+from .forms import PhotoPostForm, SearchForm
+
+
+# =======================================================================
+# 投稿関連ビュー
+# =======================================================================
+
+@method_decorator(login_required, name='dispatch')
+class ActivityCreateView(CreateView):
+    '''活動情報専用投稿ページのビュー (Category: 活動情報)'''
+    form_class = PhotoPostForm
+    template_name = "post_photo.html"
+    success_url = reverse_lazy('enright:post_done')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = '活動情報' 
+        return context
+
+    def form_valid(self, form):
+        postdata = form.save(commit=False)
+        postdata.user = self.request.user
+        
+        try:
+            activity_category = Category.objects.get(title='活動情報')
+            postdata.category = activity_category
+        except Category.DoesNotExist:
+             # カテゴリが存在しない場合の処理を実装してください
+             pass 
+        
+        postdata.save()
+        return super().form_valid(form)
+
+
+@method_decorator(login_required, name='dispatch')
+class LectureCreateView(CreateView):
+    '''講義情報専用投稿ページのビュー (Category: 講義情報)'''
+    form_class = PhotoPostForm
+    template_name = "post_photo.html"
+    success_url = reverse_lazy('enright:post_done')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = '講義情報'
+        return context
+
+    def form_valid(self, form):
+        postdata = form.save(commit=False)
+        postdata.user = self.request.user
+        try:
+            lecture_category = Category.objects.get(title='講義情報')
+            postdata.category = lecture_category
+        except Category.DoesNotExist:
+             pass 
+             
+        postdata.save()
+        return super().form_valid(form)
+
+
+@method_decorator(login_required, name='dispatch')
+class DisasterCreateView(CreateView):
+    '''災害対策情報専用投稿ページのビュー (Category: 災害対策情報)'''
+    form_class = PhotoPostForm
+    template_name = "post_photo.html"
+    success_url = reverse_lazy('enright:post_done')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = '災害対策情報'
+        return context
+
+    def form_valid(self, form):
+        postdata = form.save(commit=False)
+        postdata.user = self.request.user
+        try:
+            disaster_category = Category.objects.get(title='災害対策情報')
+            postdata.category = disaster_category
+        except Category.DoesNotExist:
+             pass 
+             
+        postdata.save()
+        return super().form_valid(form)
+
+
+class PostSuccessView(TemplateView):
+    '''投稿完了ページのビュー'''
+    template_name = 'post_success.html'
+
+# ★★★ 修正箇所1: 削除完了ビューを追加 ★★★
+class DeleteSuccessView(TemplateView):
+    '''削除完了ページのビュー'''
+    template_name = 'delete_success.html' 
+
+
+# =======================================================================
+# 一覧・詳細関連ビュー
+# =======================================================================
 
 class IndexView(ListView):
     '''トップページ(全投稿)のビュー'''
@@ -38,24 +115,9 @@ class IndexView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = SearchForm(self.request.GET)
-        
-        # ★★★ 各カテゴリの最新投稿を3件ずつ取得 ★★★
-        
-        # 1. 活動情報
-        context['activity_posts'] = PhotoPost.objects.filter(
-            category__title='活動情報'
-        ).order_by('-posted_at')[:3]
-
-        # 2. 講義情報
-        context['lecture_posts'] = PhotoPost.objects.filter(
-            category__title='講義情報'
-        ).order_by('-posted_at')[:3]
-
-        # 3. 災害対策情報
-        context['disaster_posts'] = PhotoPost.objects.filter(
-            category__title='災害対策情報'
-        ).order_by('-posted_at')[:3]
-        
+        context['activity_posts'] = PhotoPost.objects.filter(category__title='活動情報').order_by('-posted_at')[:3]
+        context['lecture_posts'] = PhotoPost.objects.filter(category__title='講義情報').order_by('-posted_at')[:3]
+        context['disaster_posts'] = PhotoPost.objects.filter(category__title='災害対策情報').order_by('-posted_at')[:3]
         context['page_title'] = 'トップページ'
         return context
     
@@ -69,35 +131,8 @@ class IndexView(ListView):
         return queryset
 
 
-# デコレーターにより、CreatePhotoViewへのアクセスはログインユーザに限定される
-@method_decorator(login_required, name='dispatch')
-class CreatePhotoView(CreateView):
-    '''写真投稿ページのビュー'''
-    # forms.pyのPhotoPostFormをフォームクラスとして登録
-    form_class = PhotoPostForm
-    # レンダリングするテンプレート
-    template_name = "post_photo.html"
-    # フォームデータ登録完了後のリダイレクト先
-    success_url = reverse_lazy('enright:post_done')
-
-    def form_valid(self, form):
-        '''CreateViewクラスのform_valid()をオーバーライド'''
-        # commit=FalseにしてPOSTされたデータを取得
-        postdata = form.save(commit=False)
-        # 投稿ユーザーのidを取得してモデルのuserフィールドに格納
-        postdata.user = self.request.user
-        # 投稿データをデータベースに登録
-        postdata.save()
-        return super().form_valid(form)
-
-class PostSuccessView(TemplateView):
-    '''投稿完了ページのビュー'''
-    # post_success.htmlをレンダリングする
-    template_name = 'post_success.html'
-
 class CategoryView(ListView):
-    '''カテゴリページのビュー (単一のカテゴリIDによる絞り込み)'''
-    # index.htmlをレンダリングする
+    '''カテゴリページのビュー'''
     template_name = 'index.html'
     paginate_by = 9
     
@@ -140,8 +175,6 @@ class MypageView(ListView):
     paginate_by = 9
 
     def get_queryset(self):
-        '''クエリを実行する (ログインユーザーによる絞り込み)'''
-        # ufilter(userフィールド=userオブジェクト)で絞り込む
         queryset = PhotoPost.objects.filter(
             user=self.request.user).order_by('-posted_at')
         return queryset
@@ -150,8 +183,8 @@ class PhotoDeleteView(DeleteView):
     '''レコードの削除を行うビュー'''
     model = PhotoPost
     template_name = 'photo_delete.html'
-    # 処理完了後にマイページにリダイレクト
-    success_url = reverse_lazy('enright:mypage')
+    # ★★★ 修正箇所2: 削除完了ページにリダイレクトするよう変更 ★★★
+    success_url = reverse_lazy('enright:delete_done')
 
     def delete(self, request, *args, **kwargs):
         return super().delete(request, *args, **kwargs)
@@ -162,23 +195,22 @@ class CategoryListView(ListView):
     paginate_by = 12
 
     def get_queryset(self):
-        # CategoryListViewで投稿をフィルタリングするロジックは通常不要だが、既存コードを保持
-        # ただし、CategoryListViewでPhotoPostをフィルタリングするのは一般的ではない
         queryset = PhotoPost.objects.filter(
             user=self.request.user).order_by('-posted_at')
         return queryset
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        # Categoryモデルから全てのカテゴリーを取得し、コンテキストに追加
         context['categories'] = Category.objects.all().order_by('title') 
         return context
 
 # ----------------------------------------------------
-# ★カテゴリ別一覧ページ用ビュー (テンプレート名を 'cat_index.html' に修正)
+# カテゴリ別一覧ページ用ビュー
 # ----------------------------------------------------
 class ActivityIndexView(ListView): 
     model = PhotoPost
-    template_name = 'cat_index.html' # ★★★ 修正済み ★★★
+    template_name = 'cat_index.html'
     paginate_by = 9 
 
     def get_queryset(self):
@@ -208,7 +240,7 @@ class LectureIndexView(ListView):
 
 class DisasterIndexView(ListView):
     model = PhotoPost
-    template_name = 'cat_index.html' # ★★★ 修正済み ★★★
+    template_name = 'cat_index.html'
     paginate_by = 9 
 
     def get_queryset(self):

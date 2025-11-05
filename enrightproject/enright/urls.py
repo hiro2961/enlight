@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from django.views.generic import TemplateView
+
 # URLパターンを逆引きできるように名前を付ける
 app_name = 'enright'
 
@@ -9,10 +9,12 @@ urlpatterns = [
     # トップページ
     path('', views.IndexView.as_view(), name='index'),
 
-    # 写真投稿ページへのアクセスはviewsモジュールCreatePhotoViewを実行
-    path('post/', views.CreatePhotoView.as_view(), name='post'),
+    # カテゴリ専用投稿ページ
+    path('activity/post/', views.ActivityCreateView.as_view(), name='activity_post'),
+    path('lecture/post/', views.LectureCreateView.as_view(), name='lecture_post'),
+    path('disaster/post/', views.DisasterCreateView.as_view(), name='disaster_post'),
 
-    # 投稿完了ページへのアクセスはviewsモジュールのPostSuccessViewを実行
+    # 投稿完了ページ
     path('post_done/',
          views.PostSuccessView.as_view(),
          name='post_done'),
@@ -53,19 +55,14 @@ urlpatterns = [
          views.PhotoDeleteView.as_view(),
          name='photo_delete' 
          ),
-     path('category/', views.CategoryListView.as_view(), name = 'category'),
+    
+    # カテゴリー一覧（カテゴリモデルの一覧）
+    path('category/', views.CategoryListView.as_view(), name='category'),
 
-# enright/urls.py のurlpatternsに追加
-
-# ... (既存のurlpatterns) ...
-
-# ----------------------------------------------------
-# ★コンテンツ別一覧ページ
-# ----------------------------------------------------
-path('activity/list/', views.ActivityIndexView.as_view(), name='activity_index'),
-path('lecture/list/', views.LectureIndexView.as_view(), name='lecture_index'),
-path('disaster/list/', views.DisasterIndexView.as_view(), name='disaster_index'),
-
-] # urlpatterns の閉じカッコ
-
-
+    # ----------------------------------------------------
+    # コンテンツ別一覧ページ
+    # ----------------------------------------------------
+    path('activity/list/', views.ActivityIndexView.as_view(), name='activity_index'),
+    path('lecture/list/', views.LectureIndexView.as_view(), name='lecture_index'),
+    path('disaster/list/', views.DisasterIndexView.as_view(), name='disaster_index'),
+]
