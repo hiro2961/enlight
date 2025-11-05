@@ -6,6 +6,7 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ('id', 'title')
     list_display_links = ('id', 'title')
 
+# --- PhotoPostAdmin（JS分離版） ---
 class PhotoPostAdmin(admin.ModelAdmin):
     list_display = (
         'id',
