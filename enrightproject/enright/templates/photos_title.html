@@ -7,10 +7,8 @@
             <p class="top-photo-title">こんにちは、{{ user.username }}さん！<br>
                 
             </p>
-            <div class="detail-flex" style="display: flex; justify-content: center; gap: 10px;">
-                <button type="button" onclick="location.href='{% url 'enright:activity_post' %}'" class="btn_01">活動情報投稿</button>
-                <button type="button" onclick="location.href='{% url 'enright:lecture_post' %}'" class="btn_01">講義情報投稿</button>
-                <button type="button" onclick="location.href='{% url 'enright:disaster_post' %}'" class="btn_01">災害対策情報投稿</button>
+            <div class="detail-flex" style="display: flex; justify-content: center;">
+                <button type="button" onclick="location.href='{% url 'enright:post' %}'" class="btn_01">投稿する</button>
                 
                 <form method="POST" action="{% url 'accounts:citizen_logout' %}" style="margin: 0;">
                     {% csrf_token %}

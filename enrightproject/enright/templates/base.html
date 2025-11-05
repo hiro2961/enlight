@@ -33,7 +33,9 @@
                     </li>
                     
                     <li><a href="{% url 'enright:mypage' %}" 
-                                class="menu-text">マイページ</a></li>
+                            class="menu-text">マイページ</a></li>
+                    <li><a href="{% url "enright:category"%}"
+                            class="menu-text">カテゴリー</a></li>
                     <li>
                         <form method="POST" action="{% url 'accounts:citizen_logout' %}">
                             {% csrf_token %}

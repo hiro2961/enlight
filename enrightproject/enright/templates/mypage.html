@@ -12,13 +12,9 @@
             {% else %}
                 <p>投稿<strong>{{ object_list.count }}</strong>件</p>
             {% endif %}
-            
-            <div style="display: flex; justify-content: center; gap: 10px; margin-top: 10px; margin-bottom: 20px;">
-                <a href="{% url 'enright:activity_post' %}" class="btn_01">活動情報投稿</a>
-                <a href="{% url 'enright:lecture_post' %}" class="btn_01">講義情報投稿</a>
-                <a href="{% url 'enright:disaster_post' %}" class="btn_01">災害対策情報投稿</a>
-            </div>
-            </div>
+            <a href="{% url 'enright:post' %}" class="btn_01">投稿する</a>
+            <p></p>
+        </div>
         <hr>
     {% endif %}
 
